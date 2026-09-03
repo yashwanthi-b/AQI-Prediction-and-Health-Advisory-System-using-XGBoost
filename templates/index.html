@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Air Pollution Monitoring</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Real-Time Air Pollution Monitoring</h1>
+
+        <p>Enter the air pollution details to predict the AQI.</p>
+
+        <form action="/predict" method="POST">
+
+            <label>City</label>
+            <select name="city" required>
+                <option value="">Select City</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Chennai">Chennai</option>
+            </select>
+
+
+            <label>PM2.5</label>
+            <input type="number" step="any" name="pm25" required>
+
+
+            <label>PM10</label>
+            <input type="number" step="any" name="pm10" required>
+
+
+            <label>NO2</label>
+            <input type="number" step="any" name="no2" required>
+
+
+            <label>SO2</label>
+            <input type="number" step="any" name="so2" required>
+
+
+            <label>CO</label>
+            <input type="number" step="any" name="co" required>
+
+
+            <label>O3</label>
+            <input type="number" step="any" name="o3" required>
+
+
+            <button type="submit">Predict AQI</button>
+
+        </form>
+
+
+        {% if prediction %}
+
+        <div class="result">
+
+            <h2>Predicted AQI</h2>
+
+            <h3>{{ prediction }}</h3>
+
+            <p>{{ recommendation }}</p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
