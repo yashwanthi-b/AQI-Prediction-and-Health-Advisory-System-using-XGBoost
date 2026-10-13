@@ -1,8 +1,8 @@
-# Real-Time Air Pollution Monitoring and Forecasting Using Big Data Pipeline
+# Real-Time Air Pollution Monitoring and Forecasting
 
 ## Project Overview
 
-Real-Time Air Pollution Monitoring and Forecasting Using Big Data Pipeline is a machine learning based web application developed to predict Air Quality Index (AQI) using major air pollution parameters.
+Real-Time Air Pollution Monitoring and Forecasting is a machine learning based web application developed to predict Air Quality Index (AQI) using major air pollution parameters.
 
 The system processes air quality data, performs data preprocessing and feature preparation, trains an XGBoost machine learning model, and provides AQI predictions through a Flask web application.
 
