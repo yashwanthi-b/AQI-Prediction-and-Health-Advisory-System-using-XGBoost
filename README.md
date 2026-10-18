@@ -6,12 +6,11 @@ AQI Prediction and Health Advisory System using XGBoost is a machine learning ba
 
 The system processes air quality data, performs data preprocessing and feature preparation, trains an XGBoost machine learning model, and provides AQI predictions through a Flask web application.
 
-The project is designed around a data processing pipeline that connects data preparation, machine learning, prediction, and web-based deployment into a single workflow.
+The project is designed around a data processing pipeline that connects data preparation, machine learning prediction, and a web interface into a single workflow.
 
 ## Objectives
 
-- Monitor air pollution levels using pollutant parameters.
-- Predict Air Quality Index (AQI) using machine learning.
+- Predict Air Quality Index (AQI) from pollutant parameters using machine learning.
 - Process and prepare air quality data for prediction.
 - Support AQI prediction for multiple cities.
 - Provide health recommendations based on predicted AQI.
