@@ -6,83 +6,81 @@ import pandas as pd
 app = Flask(__name__)
 
 
-# Load trained model
+# Load trained model, scaler and city encoder
 model = joblib.load("xgb_model.pkl")
-
-# Load scaler
 scaler = joblib.load("scaler.pkl")
-
-# Load city encoder
 city_encoder = joblib.load("city_encoder.pkl")
+
+# Cities the model was trained on
+cities = sorted(city_encoder.classes_)
+
+
+def get_category_and_advice(aqi):
+    """Indian National AQI (CPCB) categories."""
+    if aqi <= 50:
+        return "Good", "Air quality is good. Minimal impact on health."
+    elif aqi <= 100:
+        return "Satisfactory", "Minor breathing discomfort to sensitive people."
+    elif aqi <= 200:
+        return "Moderate", "People with asthma, heart or lung disease should reduce prolonged outdoor activity."
+    elif aqi <= 300:
+        return "Poor", "Most people may feel breathing discomfort on prolonged exposure. Limit outdoor activity."
+    elif aqi <= 400:
+        return "Very Poor", "Risk of respiratory illness on prolonged exposure. Avoid outdoor activity."
+    else:
+        return "Severe", "Serious health impact, even on healthy people. Stay indoors."
 
 
 # Home page
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("index.html", cities=cities)
 
 
 # Prediction
 @app.route("/predict", methods=["POST"])
 def predict():
+    try:
+        city = request.form["city"]
+        pm25 = float(request.form["pm25"])
+        pm10 = float(request.form["pm10"])
+        no2 = float(request.form["no2"])
+        so2 = float(request.form["so2"])
+        co = float(request.form["co"])
+        o3 = float(request.form["o3"])
+    except (KeyError, ValueError):
+        return render_template(
+            "index.html", cities=cities,
+            error="Please enter valid numbers in all fields."
+        )
 
-    city = request.form["city"]
-    pm25 = float(request.form["pm25"])
-    pm10 = float(request.form["pm10"])
-    no2 = float(request.form["no2"])
-    so2 = float(request.form["so2"])
-    co = float(request.form["co"])
-    o3 = float(request.form["o3"])
+    if city not in cities:
+        return render_template(
+            "index.html", cities=cities,
+            error="Please select a valid city."
+        )
 
     # Convert city to number
     city_encoded = city_encoder.transform([city])[0]
 
     # Create input dataframe
-    input_data = pd.DataFrame([[
-        city_encoded,
-        pm25,
-        pm10,
-        no2,
-        so2,
-        co,
-        o3
-    ]], columns=[
-        "City",
-        "PM2.5",
-        "PM10",
-        "NO2",
-        "SO2",
-        "CO",
-        "O3"
-    ])
+    input_data = pd.DataFrame(
+        [[city_encoded, pm25, pm10, no2, so2, co, o3]],
+        columns=["City", "PM2.5", "PM10", "NO2", "SO2", "CO", "O3"]
+    )
 
-    # Scale input
+    # Scale input and predict AQI
     input_scaled = scaler.transform(input_data)
+    prediction = max(0, round(float(model.predict(input_scaled)[0]), 2))
 
-    # Predict AQI
-    prediction = model.predict(input_scaled)[0]
-
-    prediction = round(prediction, 2)
-
-
-    # Health recommendation
-    if prediction <= 50:
-        recommendation = "Good air quality. Air pollution poses little or no risk."
-    elif prediction <= 100:
-        recommendation = "Moderate air quality. Sensitive people should take care."
-    elif prediction <= 150:
-        recommendation = "Unhealthy for sensitive groups. Reduce prolonged outdoor activity."
-    elif prediction <= 200:
-        recommendation = "Unhealthy air quality. Consider reducing outdoor activities."
-    elif prediction <= 300:
-        recommendation = "Very unhealthy air quality. Avoid prolonged outdoor exposure."
-    else:
-        recommendation = "Hazardous air quality. Avoid outdoor activities."
-
+    category, recommendation = get_category_and_advice(prediction)
 
     return render_template(
         "index.html",
+        cities=cities,
+        selected_city=city,
         prediction=prediction,
+        category=category,
         recommendation=recommendation
     )
 
