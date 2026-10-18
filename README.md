@@ -28,7 +28,7 @@ The project is designed around a data processing pipeline that connects data pre
 - City encoding
 - XGBoost machine learning model
 - Flask web application
-- Real-time prediction through a web interface
+- Instant AQI prediction through a web interface
 - Health recommendations based on predicted AQI
 - Saved machine learning model and preprocessing files
 
