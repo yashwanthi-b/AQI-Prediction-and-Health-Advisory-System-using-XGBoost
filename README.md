@@ -1,8 +1,8 @@
-# Real-Time Air Pollution Monitoring and Forecasting
+# AQI Prediction and Health Advisory System using XGBoost
 
 ## Project Overview
 
-Real-Time Air Pollution Monitoring and Forecasting is a machine learning based web application developed to predict Air Quality Index (AQI) using major air pollution parameters.
+AQI Prediction and Health Advisory System using XGBoost is a machine learning based web application developed to predict Air Quality Index (AQI) using major air pollution parameters.
 
 The system processes air quality data, performs data preprocessing and feature preparation, trains an XGBoost machine learning model, and provides AQI predictions through a Flask web application.
 
